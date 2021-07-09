@@ -20,6 +20,28 @@ function ScreenHome() {
   const user = useSelector(state => state.user)
   console.log(user);
   
+  /* Utility */
+  const refreshStore = async (token) => {
+    // Update token in the store
+    dispatch({
+      type: 'addToken',
+      token
+    });
+    // update the wishlist in the store
+    const response = await fetch(`/wishlist?token=${token}`);
+    const { articles, err } = await response.json();
+    console.log('WishL: ', articles, 'ERR: ', err);
+    if (articles) {
+      dispatch({
+        type: 'setUpWishlist',
+        articles
+      });
+    }
+    if (err) {
+      console.log(err);
+    }
+  }
+
 
   const handleSubmitSignUp = async () => {
     
@@ -36,16 +58,15 @@ function ScreenHome() {
       //console.log('Something gone wrong: ', responseBody.message);
       setErrorMessage(responseBody.message);
     } else {
-      dispatch({
-        type: 'addToken',
-        token: responseBody.token
-      });
+      refreshStore( responseBody.token );
       setSignUpUsername('');
       setSignUpEmail('');
       setSignUpPassword('');
       setIsLogin(true);
       setErrorMessage(false);
+
       //console.log('TOKEN UP: ', responseBody.token);
+      
     }
   }
 
@@ -65,15 +86,13 @@ function ScreenHome() {
       //console.log('Something gone wrong: ', responseBody.message);
       setErrorMessage(responseBody.message);
     } else {
-      dispatch({
-        type: 'addToken',
-        token: responseBody.user.token
-      });
+      refreshStore( responseBody.user.token );
       setSignInEmail('');
       setSignInPassword('');
       setErrorMessage(false);
       setIsLogin(true);
       //console.log('TOKEN IN: ', responseBody.user.token);
+
     }
   }
 

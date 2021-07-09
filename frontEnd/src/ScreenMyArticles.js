@@ -29,6 +29,8 @@ function ScreenMyArticles() {
     setIsModalVisible(false);
   };
 
+  const userToken = useSelector(state => state.user)
+
   //console.log('myArticles: ', useSelector(state => state.articles));
 
 
@@ -72,7 +74,7 @@ function ScreenMyArticles() {
                           }
                           actions={[
                               <Icon type="read" key="ellipsis2" onClick={() => showModal(title, content, urlToImage)} />,
-                              <Icon type="delete" key="ellipsis" onClick={() => dispatch({ type: 'deleteArticle', title: title })} />
+                              <Icon type="delete" key="ellipsis" onClick={() => dispatch({ type: 'deleteArticle', title: title, userToken })} />
                           ]}
                           >
                           <Meta
