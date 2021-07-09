@@ -3,13 +3,14 @@ import './App.css';
 import { List, Card, Icon, Modal} from 'antd';
 import Nav from './Nav';
 import { useParams } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 const { Meta } = Card;
 
 // REVOIR LA MISE EN PAGE POUR ARTICLES DE GOOGLE NEWS
 
-function ScreenArticlesBySource(props) {
+function ScreenArticlesBySource() {
+  const dispatch = useDispatch();
   const { sourceId } = useParams();
   //console.log('ID: ', sourceId);
 
@@ -83,7 +84,7 @@ function ScreenArticlesBySource(props) {
                       }
                       actions={[
                           <Icon type="read" key="ellipsis2" onClick={() => showModal(title, content, urlToImage)} />,
-                          <Icon type="like" key="ellipsis" onClick={() => {props.addToWishlist(title, description, content, urlToImage)}}/>
+                          <Icon type="like" key="ellipsis" onClick={() => {dispatch({type: 'addArticle', article: { title, description, content, urlToImage }})}}/>
                       ]}
                       >
                       <Meta
@@ -111,20 +112,5 @@ function ScreenArticlesBySource(props) {
   );
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return{
-    addToWishlist: (title, description, content, urlToImage) => {
-      dispatch({
-        type: 'addArticle',
-        article: { title, description, content, urlToImage }
-      });
-    }
-  }
-}
 
-
-
-export default connect(
-  null,
-  mapDispatchToProps
-)(ScreenArticlesBySource);
+export default ScreenArticlesBySource;

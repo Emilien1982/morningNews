@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import './App.css';
 import { List, Card, Icon, Modal} from 'antd';
-import Nav from './Nav'
-import { connect } from 'react-redux';
+import Nav from './Nav';
+import { useDispatch, useSelector } from 'react-redux';
 
 const { Meta } = Card;
 
-function ScreenMyArticles(props) {
+function ScreenMyArticles() {
+  const dispatch = useDispatch();
 
   const [modalTitle, setModalTitle] = useState(null);
   const [modalImgSrc, setModalImgSrc] = useState(null);
@@ -28,7 +29,7 @@ function ScreenMyArticles(props) {
     setIsModalVisible(false);
   };
 
-  //console.log('myArticles: ', props.myArticles);
+  //console.log('myArticles: ', useSelector(state => state.articles));
 
 
   return (
@@ -37,7 +38,7 @@ function ScreenMyArticles(props) {
 
             <div className="Banner"/>
 
-            {props.myArticles.length === 0 && <h2 className='no-articles'>No Articles</h2>}   {/* Demandé en bonus mais déjà géré par le composant List de ant-Design */}
+            {useSelector(state => state.articles).length === 0 && <h2 className='no-articles'>No Articles</h2>}   {/* Demandé en bonus mais déjà géré par le composant List de ant-Design */}
 
             <div className="site-card-wrapper">
               <List
@@ -50,7 +51,7 @@ function ScreenMyArticles(props) {
                   xl: 6,
                   xxl: 3,
                 }}
-                dataSource={props.myArticles}
+                dataSource={useSelector(state => state.articles)}
                 renderItem={({title, description, content, urlToImage}) => (
                   <List.Item>
                     <div className="Card">
@@ -71,7 +72,7 @@ function ScreenMyArticles(props) {
                           }
                           actions={[
                               <Icon type="read" key="ellipsis2" onClick={() => showModal(title, content, urlToImage)} />,
-                              <Icon type="delete" key="ellipsis" onClick={() => props.deleteToWishlist(title)} />
+                              <Icon type="delete" key="ellipsis" onClick={() => dispatch({ type: 'deleteArticle', title: title })} />
                           ]}
                           >
                           <Meta
@@ -100,23 +101,5 @@ function ScreenMyArticles(props) {
   );
 }
 
-const mapStateToProps = (state) => {
-  //console.log('STATE: ', state);
-  return {myArticles: state.articles};
-}
 
-const mapDispatchToProps = (dispatch) => {
-  return{
-    deleteToWishlist: (title) => {
-      dispatch({
-        type: 'deleteArticle',
-        title: title
-      });
-    }
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ScreenMyArticles);
+export default ScreenMyArticles;
