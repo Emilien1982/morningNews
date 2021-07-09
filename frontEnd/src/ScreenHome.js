@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import './App.css';
 import {Alert, Input, Button} from 'antd';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 function ScreenHome() {
   const dispatch = useDispatch();
@@ -16,6 +16,9 @@ function ScreenHome() {
 
   const [isLogin, setIsLogin] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
+
+  const user = useSelector(state => state.user)
+  console.log(user);
   
   /* Utility */
   const refreshStore = async (token) => {
@@ -55,24 +58,15 @@ function ScreenHome() {
       //console.log('Something gone wrong: ', responseBody.message);
       setErrorMessage(responseBody.message);
     } else {
+      refreshStore( responseBody.token );
       setSignUpUsername('');
       setSignUpEmail('');
       setSignUpPassword('');
       setIsLogin(true);
       setErrorMessage(false);
-      console.log('TOKEN UP: ', responseBody.token);
-      refreshStore( responseBody.token );
-      /* // Update token in the store
-      dispatch({
-        type: 'addToken',
-        token: responseBody.token
-      });
-      // update the wishlist in the store
-      const wishlist = await fetch(`/wishlist?${responseBody.token}`);
-      dispatch({
-        type: 'setUpWishlist',
-        wishlist
-      }); */
+
+      //console.log('TOKEN UP: ', responseBody.token);
+      
     }
   }
 
@@ -92,12 +86,13 @@ function ScreenHome() {
       //console.log('Something gone wrong: ', responseBody.message);
       setErrorMessage(responseBody.message);
     } else {
+      refreshStore( responseBody.user.token );
       setSignInEmail('');
       setSignInPassword('');
       setErrorMessage(false);
       setIsLogin(true);
       //console.log('TOKEN IN: ', responseBody.user.token);
-      refreshStore( responseBody.user.token );
+
     }
   }
 
@@ -110,7 +105,7 @@ function ScreenHome() {
 
       <div style={{display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
 
-        {isLogin && < Redirect to='/screensource' />}
+        {isLogin && < Redirect to={`/screensource/${user}`} />}
 
         {/* SIGN-IN */}
 

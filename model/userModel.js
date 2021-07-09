@@ -4,7 +4,8 @@ const userSchema = mongoose.Schema({
   userName: {type: String, required: true},
   email: {type: String, required: true, unique: true},
   pwdHash: {type: String, required: true},
-  token: String
+  token: String,
+  language: String
 });
 
 module.exports = mongoose.model('users', userSchema);

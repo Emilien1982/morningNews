@@ -23,7 +23,8 @@ router.post('/sign-up', async (req, res) => {
     userName: req.body.usernameFromFront,
     email: req.body.emailFromFront,
     pwdHash: bcrypt.hashSync(req.body.passwordFromFront, Number(process.env.CRYPT_COST)),
-    token: uid2(32)
+    token: uid2(32),
+    language: 'fr'
   });
 
   const savedUser = await newUser.save();
@@ -35,7 +36,7 @@ router.post('/sign-up', async (req, res) => {
   }
 });
 
-
+/* SIGN IN */
 router.post('/sign-in', async (req, res) => {
   let user = false;
   if (req.body.emailFromFront && req.body.passwordFromFront) {

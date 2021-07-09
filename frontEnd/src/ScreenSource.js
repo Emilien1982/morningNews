@@ -2,23 +2,47 @@ import React,{useState, useEffect} from 'react';
 import './App.css';
 import { List, Avatar} from 'antd';
 import Nav from './Nav';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const LANGUAGES = ['fr', 'be', 'us', 'gb'];
 const CATEGORY_WITH_ICON = ['business', 'general', 'sports'];
 
 function ScreenSource() {
+  const {user} = useParams();
   const [sourceList, setSourceList] = useState([]);
   const [selectedLanguage, setSelectedLanguage] = useState(LANGUAGES[0]);
+  // const user = useSelector(state => state.user);
+  console.log(user);
 
-  useEffect(() =>{
-    const loadSources = async () => {
-      const response = await fetch(`https://newsapi.org/v2/top-headlines/sources?country=${selectedLanguage}&apiKey=00eb781fbc674c2185c39fc309988ef3`);
-      const { sources } = await response.json();
-      setSourceList(sources);
-    }
-    loadSources();
+  useEffect(() => {
+    console.log(user);
+    fetch(`/load-source?user=${user}`)
+      .then(response => response.json())
+      .then(data => setSourceList(data.sources));
+  }, [])
+
+  useEffect(() => {
+    console.log(user);
+    fetch(`/load-source?user=${user}`)
+      .then(response => response.json())
+      .then(data => setSourceList(data.sources));
   } , [selectedLanguage])
+
+  const handleClickFlag = async (language) => {
+    setSelectedLanguage(language);
+    fetch(`/change-language/${user}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `language=${language}`
+    })
+      .then(response => response.json())
+      .then(result => {
+        console.log('Success:', result);
+      })
+  }
 
   const languageFlags = LANGUAGES.map(language => {
     let classes = 'language_flags';
@@ -30,7 +54,7 @@ function ScreenSource() {
       className={classes}
       src={`../images/${language}.png`} 
       alt={`language-${language}`}
-      onClick={() => {setSelectedLanguage(language)}}
+      onClick={() => handleClickFlag(language)}
     />
   })
 
