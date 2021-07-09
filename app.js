@@ -19,7 +19,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'fontEnd/build')));
+app.use(express.static(path.join(__dirname, 'frontEnd/build')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

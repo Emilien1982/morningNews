@@ -3,7 +3,7 @@ import './App.css';
 import { List, Card, Icon, Modal} from 'antd';
 import Nav from './Nav';
 import { useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const { Meta } = Card;
 
@@ -48,6 +48,9 @@ function ScreenArticlesBySource() {
     setIsModalVisible(false);
   };
 
+  const userToken = useSelector((state) => state.user);
+  //console.log('Token in artBySou: ', userToken);
+
   return (
     <div>
       <Nav/>
@@ -84,7 +87,7 @@ function ScreenArticlesBySource() {
                       }
                       actions={[
                           <Icon type="read" key="ellipsis2" onClick={() => showModal(title, content, urlToImage)} />,
-                          <Icon type="like" key="ellipsis" onClick={() => {dispatch({type: 'addArticle', article: { title, description, content, urlToImage }})}}/>
+                          <Icon type="like" key="ellipsis" onClick={() => {dispatch({type: 'addArticle', article: { title, description, content, urlToImage }, userToken})}}/>
                       ]}
                       >
                       <Meta

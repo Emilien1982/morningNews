@@ -38,7 +38,7 @@ function ScreenHome() {
       setSignUpPassword('');
       setIsLogin(true);
       setErrorMessage(false);
-      //console.log('TOKEN UP: ', responseBody.token);
+      console.log('TOKEN UP: ', responseBody.token);
       dispatch({
         type: 'addToken',
         token: responseBody.token
@@ -66,7 +66,7 @@ function ScreenHome() {
       setSignInPassword('');
       setErrorMessage(false);
       setIsLogin(true);
-      //console.log('TOKEN IN: ', responseBody.user.token);
+      console.log('TOKEN IN: ', responseBody.user.token);
       dispatch({
         type: 'addToken',
         token: responseBody.user.token
