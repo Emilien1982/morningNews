@@ -25,6 +25,8 @@ export default (articles = [], action) => {
       }
     )
     return articles.filter(article => article.title !== action.title);
+  } else if (action.type === 'setUpWishlist'){
+    return action.articles;
   } else {
     return articles;
   }

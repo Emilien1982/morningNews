@@ -17,6 +17,28 @@ function ScreenHome() {
   const [isLogin, setIsLogin] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
   
+  /* Utility */
+  const refreshStore = async (token) => {
+    // Update token in the store
+    dispatch({
+      type: 'addToken',
+      token
+    });
+    // update the wishlist in the store
+    const response = await fetch(`/wishlist?token=${token}`);
+    const { articles, err } = await response.json();
+    console.log('WishL: ', articles, 'ERR: ', err);
+    if (articles) {
+      dispatch({
+        type: 'setUpWishlist',
+        articles
+      });
+    }
+    if (err) {
+      console.log(err);
+    }
+  }
+
 
   const handleSubmitSignUp = async () => {
     
@@ -39,10 +61,18 @@ function ScreenHome() {
       setIsLogin(true);
       setErrorMessage(false);
       console.log('TOKEN UP: ', responseBody.token);
+      refreshStore( responseBody.token );
+      /* // Update token in the store
       dispatch({
         type: 'addToken',
         token: responseBody.token
       });
+      // update the wishlist in the store
+      const wishlist = await fetch(`/wishlist?${responseBody.token}`);
+      dispatch({
+        type: 'setUpWishlist',
+        wishlist
+      }); */
     }
   }
 
@@ -66,11 +96,8 @@ function ScreenHome() {
       setSignInPassword('');
       setErrorMessage(false);
       setIsLogin(true);
-      console.log('TOKEN IN: ', responseBody.user.token);
-      dispatch({
-        type: 'addToken',
-        token: responseBody.user.token
-      });
+      //console.log('TOKEN IN: ', responseBody.user.token);
+      refreshStore( responseBody.user.token );
     }
   }
 
