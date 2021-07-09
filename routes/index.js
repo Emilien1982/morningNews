@@ -8,7 +8,7 @@ const userModel = require('../model/userModel');
 /* Get the wishlist of the user */
 router.get('/wishlist', async (req, res) => {
   const { token } = req.query;
-  console.log('GET TOKEN: ', token);
+  //console.log('GET TOKEN: ', token);
   const user = await userModel.findOne({token: token});
   if (!user){
     return res.status(400).json({err: 'current token don t match any user'});
