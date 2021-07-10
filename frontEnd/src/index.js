@@ -5,10 +5,11 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import articles from './reducers/article.reducer';
 import user from './reducers/user.reducer';
+import language from './reducers/language.reducer';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux'
 
-const store = createStore(combineReducers({articles, user}));
+const store = createStore(combineReducers({articles, user, language}));
 
 ReactDOM.render(
     <Provider store={ store }>

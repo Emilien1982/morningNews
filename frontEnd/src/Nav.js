@@ -2,15 +2,18 @@ import React from 'react';
 import './App.css';
 import {Menu, Icon} from 'antd'
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
 
 function Nav() {
+  const user = useSelector(state => state.user);
 
   return (
     <nav >
       <Menu style={{textAlign: 'center'}} mode="horizontal" theme="dark">
 
         <Menu.Item key="mail">
-          <Link to='/screensource' ><Icon type="home" />Sources</Link>
+          <Link to={`/screensource/${user}`} ><Icon type="home" />Sources</Link>
         </Menu.Item>
 
         <Menu.Item key="test">

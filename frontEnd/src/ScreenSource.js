@@ -4,33 +4,34 @@ import { List, Avatar} from 'antd';
 import Nav from './Nav';
 import { Link, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import LANGUAGES from './utilities/supportedLanguages';
 
-const LANGUAGES = ['fr', 'be', 'us', 'gb'];
+
 const CATEGORY_WITH_ICON = ['business', 'general', 'sports'];
 
 function ScreenSource() {
-  const {user} = useParams();
+  const {user} = useParams();   // ICI USER = TOKEN, hors le token est stoké dans le store, est ce vraiment utile de le passer en params??
   const [sourceList, setSourceList] = useState([]);
-  const [selectedLanguage, setSelectedLanguage] = useState(LANGUAGES[0]);
+  const registredLanguage = useSelector(state => state.language);
+  const [selectedLanguage, setSelectedLanguage] = useState(registredLanguage);
   // const user = useSelector(state => state.user);
-  console.log(user);
+  //console.log(user);
 
   useEffect(() => {
-    console.log(user);
+    //console.log(user);
     fetch(`/load-source?user=${user}`)
       .then(response => response.json())
       .then(data => setSourceList(data.sources));
   }, [])
 
   useEffect(() => {
-    console.log(user);
+    //console.log(user);
     fetch(`/load-source?user=${user}`)
       .then(response => response.json())
       .then(data => setSourceList(data.sources));
   } , [selectedLanguage])
 
   const handleClickFlag = async (language) => {
-    setSelectedLanguage(language);
     fetch(`/change-language/${user}`, {
       method: 'PUT',
       headers: {
@@ -38,10 +39,12 @@ function ScreenSource() {
       },
       body: `language=${language}`
     })
-      .then(response => response.json())
-      .then(result => {
-        console.log('Success:', result);
-      })
+    .then(response => response.json())
+    .then(result => {
+      console.log('Success:', result);
+    })
+    .then(() => setSelectedLanguage(language))
+    ;
   }
 
   const languageFlags = LANGUAGES.map(language => {

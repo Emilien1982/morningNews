@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import './App.css';
 import {Alert, Input, Button} from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+
+const DEFAULT_LANGUAGE = 'fr';
 
 function ScreenHome() {
   const dispatch = useDispatch();
@@ -17,20 +19,24 @@ function ScreenHome() {
   const [isLogin, setIsLogin] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
 
-  const user = useSelector(state => state.user)
-  console.log(user);
+  //console.log(user);
   
   /* Utility */
-  const refreshStore = async (token) => {
+  const refreshStore = async (token, language = DEFAULT_LANGUAGE) => {
     // Update token in the store
     dispatch({
       type: 'addToken',
       token
     });
+    // Update language in the store
+    dispatch({
+      type: 'addLanguage',
+      language
+    });
     // update the wishlist in the store
     const response = await fetch(`/wishlist?token=${token}`);
     const { articles, err } = await response.json();
-    console.log('WishL: ', articles, 'ERR: ', err);
+    //console.log('WishL: ', articles, 'ERR: ', err);
     if (articles) {
       dispatch({
         type: 'setUpWishlist',
@@ -86,7 +92,7 @@ function ScreenHome() {
       //console.log('Something gone wrong: ', responseBody.message);
       setErrorMessage(responseBody.message);
     } else {
-      refreshStore( responseBody.user.token );
+      refreshStore( responseBody.user.token, responseBody.user.language );
       setSignInEmail('');
       setSignInPassword('');
       setErrorMessage(false);
@@ -105,7 +111,7 @@ function ScreenHome() {
 
       <div style={{display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
 
-        {isLogin && < Redirect to={`/screensource/${user}`} />}
+        {isLogin && < Redirect to={`/screenmyarticles`} />}
 
         {/* SIGN-IN */}
 

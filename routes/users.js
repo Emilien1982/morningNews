@@ -49,7 +49,7 @@ router.post('/sign-in', async (req, res) => {
   }
   
   if (user && bcrypt.compareSync(req.body.passwordFromFront, user.pwdHash)) {
-    const { _id, userName, email } = user;
+    const { userName, language } = user;
     // destruturation pour renvoyer le user sans le password
     const newToken = uid2(32);
     const updatedUser = await userModel.updateOne(user, {token: newToken}).exec();
@@ -57,7 +57,7 @@ router.post('/sign-in', async (req, res) => {
     if (updatedUser.nModified === 1){
       return res.status(200).json({
         loginCorrect: true,
-        user:{ userName, email, token: newToken }
+        user:{ userName, language, token: newToken }
       });
     }
   }
