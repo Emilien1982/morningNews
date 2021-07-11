@@ -51,6 +51,8 @@ function ScreenArticlesBySource() {
   const userToken = useSelector((state) => state.user);
   //console.log('Token in artBySou: ', userToken);
 
+  const language = useSelector(state => state.language);
+
   return (
     <div>
       <Nav/>
@@ -87,7 +89,7 @@ function ScreenArticlesBySource() {
                       }
                       actions={[
                           <Icon type="read" key="ellipsis2" onClick={() => showModal(title, content, urlToImage)} />,
-                          <Icon type="like" key="ellipsis" onClick={() => {dispatch({type: 'addArticle', article: { title, description, content, urlToImage }, userToken})}}/>
+                          <Icon type="like" key="ellipsis" onClick={() => {dispatch({type: 'addArticle', article: { title, description, content, urlToImage, language }, userToken})}}/>
                       ]}
                       >
                       <Meta

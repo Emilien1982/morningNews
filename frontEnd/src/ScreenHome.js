@@ -64,7 +64,7 @@ function ScreenHome() {
       //console.log('Something gone wrong: ', responseBody.message);
       setErrorMessage(responseBody.message);
     } else {
-      refreshStore( responseBody.token );
+      await refreshStore( responseBody.token );
       setSignUpUsername('');
       setSignUpEmail('');
       setSignUpPassword('');
@@ -92,7 +92,7 @@ function ScreenHome() {
       //console.log('Something gone wrong: ', responseBody.message);
       setErrorMessage(responseBody.message);
     } else {
-      refreshStore( responseBody.user.token, responseBody.user.language );
+      await refreshStore( responseBody.user.token, responseBody.user.language );
       setSignInEmail('');
       setSignInPassword('');
       setErrorMessage(false);
@@ -106,12 +106,11 @@ function ScreenHome() {
   return (
     
     <div className="Login-page" >
+      {isLogin && < Redirect to={`/screenmyarticles`} />}
 
       { errorMessage && <Alert message={errorMessage} type="error"  showIcon/> }
 
       <div style={{display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
-
-        {isLogin && < Redirect to={`/screenmyarticles`} />}
 
         {/* SIGN-IN */}
 

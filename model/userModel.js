@@ -5,7 +5,8 @@ const articleSchema = new mongoose.Schema({
   title: {type: String, required: true},
   description: String,
   content: String,
-  urlToImage: String
+  urlToImage: String,
+  language: String
 });
 
 const userSchema = mongoose.Schema({

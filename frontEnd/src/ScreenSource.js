@@ -3,7 +3,7 @@ import './App.css';
 import { List, Avatar} from 'antd';
 import Nav from './Nav';
 import { Link, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import LANGUAGES from './utilities/supportedLanguages';
 
 
@@ -12,8 +12,11 @@ const CATEGORY_WITH_ICON = ['business', 'general', 'sports'];
 function ScreenSource() {
   const {user} = useParams();   // ICI USER = TOKEN, hors le token est stoké dans le store, est ce vraiment utile de le passer en params??
   const [sourceList, setSourceList] = useState([]);
+
   const registredLanguage = useSelector(state => state.language);
   const [selectedLanguage, setSelectedLanguage] = useState(registredLanguage);
+
+  const dispatch = useDispatch();
   // const user = useSelector(state => state.user);
   //console.log(user);
 
@@ -26,10 +29,12 @@ function ScreenSource() {
 
   useEffect(() => {
     //console.log(user);
+    dispatch({type: 'addLanguage', language: selectedLanguage});
     fetch(`/load-source?user=${user}`)
       .then(response => response.json())
       .then(data => setSourceList(data.sources));
   } , [selectedLanguage])
+
 
   const handleClickFlag = async (language) => {
     fetch(`/change-language/${user}`, {

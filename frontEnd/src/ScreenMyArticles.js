@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import { List, Card, Icon, Modal} from 'antd';
 import Nav from './Nav';
@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import LANGUAGES from './utilities/supportedLanguages';
 
 
+// AU SIGN IN LES ARTICLES AFFICHE SONT CEUX DU PRECEDENT USER.
 
 const { Meta } = Card;
 
@@ -16,7 +17,21 @@ function ScreenMyArticles() {
   const [modalImgSrc, setModalImgSrc] = useState(null);
   const [modalContent, setModalContent] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState('all');
+
+  let storedWishlist = useSelector(state => state.articles);;
+  const [articleToDisplay, setArticleToDisplay] = useState([]);
+  //console.log('ARTICLES: ', articleToDisplay);
+
+  useEffect(()=>{
+    setArticleToDisplay(storedWishlist);
+  }, [])
+
+  useEffect(() => {
+    if (selectedLanguage !== 'all'){
+      setArticleToDisplay( storedWishlist.filter(article => article.language === selectedLanguage) )
+    }
+  }, [selectedLanguage])
 
   const showModal = (title, content, urlToImage) => {
     setModalTitle(title);
@@ -38,24 +53,8 @@ function ScreenMyArticles() {
   //console.log('myArticles: ', useSelector(state => state.articles));
 
   const handleClickFlag = async (language) => {
-    console.log('Language to filter: ', language);
+    //console.log('Language to filter: ', language);
     setSelectedLanguage(language);
-
-    // RESTE A GERER LE FILTRAGE DES ARTICLES DE LA WISHLIST EN FONCTION DE LA LANGUE
-
-   /*  fetch(`/change-language/${user}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: `language=${language}`
-    })
-    .then(response => response.json())
-    .then(result => {
-      console.log('Success:', result);
-    })
-    .then(() => setSelectedLanguage(language))
-    ; */
   }
 
   const languageFlags = LANGUAGES.map(language => {
@@ -71,6 +70,11 @@ function ScreenMyArticles() {
       onClick={() => handleClickFlag(language)}
     />
   })
+
+  const handleDelete = (title) => {
+    setArticleToDisplay(storedWishlist.filter(article => article.title !== title));
+    dispatch({ type: 'deleteArticle', title: title, userToken });
+  }
 
   return (
     <div>
@@ -95,7 +99,7 @@ function ScreenMyArticles() {
                   xl: 6,
                   xxl: 3,
                 }}
-                dataSource={useSelector(state => state.articles)}
+                dataSource={articleToDisplay}
                 renderItem={({title, description, content, urlToImage}) => (
                   <List.Item>
                     <div className="Card">
@@ -116,7 +120,7 @@ function ScreenMyArticles() {
                           }
                           actions={[
                               <Icon type="read" key="ellipsis2" onClick={() => showModal(title, content, urlToImage)} />,
-                              <Icon type="delete" key="ellipsis" onClick={() => dispatch({ type: 'deleteArticle', title: title, userToken })} />
+                              <Icon type="delete" key="ellipsis" onClick={() => handleDelete(title)} />
                           ]}
                           >
                           <Meta
